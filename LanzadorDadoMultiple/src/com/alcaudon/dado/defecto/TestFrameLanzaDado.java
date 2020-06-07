@@ -1,6 +1,6 @@
-package com.alcaudon.dado.vista;
+package com.alcaudon.dado.defecto;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
 import com.alcaudon.dado.vista.*;
 

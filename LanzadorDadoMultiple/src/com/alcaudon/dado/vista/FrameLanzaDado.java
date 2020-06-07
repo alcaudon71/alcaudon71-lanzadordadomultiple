@@ -4,7 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-class FrameLanzaDado extends JFrame {
+public class FrameLanzaDado extends JFrame {
 
 	private static final String FRAME_TITULO = "App Lanza Dados";
 	private static final Integer FRAME_POS_HORIZONTAL = 400;
@@ -18,6 +18,9 @@ class FrameLanzaDado extends JFrame {
 		
 		setBounds(FRAME_POS_HORIZONTAL, FRAME_POS_VERTICAL, FRAME_ANCHO, FRAME_ALTO);
 		
+		System.out.println("*** Cargamos Frame ***");
+		
+		//PanelLanzaDadoIntegrado panelLanzaDado = new PanelLanzaDadoIntegrado();
 		PanelLanzaDado panelLanzaDado = new PanelLanzaDado();
 		
 		// Establecemos el Layout del Panel 
@@ -25,7 +28,7 @@ class FrameLanzaDado extends JFrame {
 		//panelLanzaDado.setLayout(disposicion);
 		
 		// Añadimos el Panel a nuestro Frame
-		add(panelLanzaDado, BorderLayout.CENTER);
+		add(panelLanzaDado);
 		
 		// Establecemos color de fondo del Panel
 		panelLanzaDado.setBackground(Color.PINK);
