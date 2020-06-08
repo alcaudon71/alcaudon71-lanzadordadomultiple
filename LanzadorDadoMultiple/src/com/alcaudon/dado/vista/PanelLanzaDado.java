@@ -51,7 +51,7 @@ public class PanelLanzaDado extends JPanel {
 	
 	private Image imagen;
 	public JTextField texto;
-	//public Integer dadoPanel;
+	//public String dadoPanel;
 	
 	public PanelLanzaDado() {
 
