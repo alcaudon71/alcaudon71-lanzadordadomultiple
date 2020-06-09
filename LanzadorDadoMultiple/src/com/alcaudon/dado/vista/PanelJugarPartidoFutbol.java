@@ -1,14 +1,13 @@
 package com.alcaudon.dado.vista;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.Font;
 import java.awt.Image;
-import java.awt.image.ImageObserver;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -52,58 +51,69 @@ public class PanelJugarPartidoFutbol extends JPanel {
 		// Añadimos el Layout al Panel 
 		setLayout(disposicion);
 		
-		File miImagen = new File(IMAGEN_RUTA_CAMPO_FUTBOL);
-		//File miImagen = new File(IMAGEN_RUTA_DADOS_MULTIPLES);
-
-		try {
-
-			imagen = ImageIO.read(miImagen);
-
-		} catch (IOException e) {
-
-			System.out.println(IMAGEN_ERROR);
-
-		}
 		
-	}
-	
-	@Override
-	public void paintComponent (Graphics g) {
-
-		// Ejecutamos el software por defecto de la clase "paintComponent"
-		super.paintComponent(g);
-
-		// Adicionalmente, añadimos nuestra logica:
-
-		// Capturamos las dimensiones de la imagen
-		Integer anchuraImagen = imagen.getWidth(this);
-		Integer alturaImagen = imagen.getHeight(this);
-
-		// Dibujamos la imagen 
-		ImageObserver progresion = null; // progresion del renderizado de la imagen 
-
-		Dimension dim = this.getSize();
-		Integer dimAlto = dim.height;
-		Integer dimAncho = dim.width;
+		PanelFotoCampoFutbol fotoCampoFutbol = new PanelFotoCampoFutbol();
 		
-		//g.drawImage(imagen, IMAGEN_POS_HORIZONTAL, IMAGEN_POS_VERTICAL, progresion);
-		//g.drawImage(imagen, IMAGEN_POS_HORIZONTAL, IMAGEN_POS_VERTICAL, 400, 400, progresion);
-		g.drawImage(imagen, IMAGEN_POS_HORIZONTAL, IMAGEN_POS_VERTICAL, dimAncho, dimAlto, progresion);
-
-		//		// Establecemos un mosaico repetitivo 
-		//		for (int i=0 ; i<MarcoImagen.FRAME_ANCHO; i++) {
-		//			
-		//			for (int j=0; j<MarcoImagen.FRAME_ALTO; j++) {
-		//		
-		//				if ( i + j > 0) { // Nos saltamos la primera iteracion, para no machacar nuestra imagen inicial 
-		//					// Copiar una imagen y replicar a una distancia determinada
-		//					//g.copyArea(IMAGEN_POS_HORIZONTAL, IMAGEN_POS_VERTICAL, IMAGEN_ANCHO, IMAGEN_ALTO, i * IMAGEN_ANCHO, j * IMAGEN_ALTO);
-		//					g.copyArea(IMAGEN_POS_HORIZONTAL, IMAGEN_POS_VERTICAL, anchuraImagen, alturaImagen, i * anchuraImagen, j * alturaImagen);
-		//				}
-		//		
-		//			}
-		//		}
-
+		add(fotoCampoFutbol, BorderLayout.CENTER);
+		
+		
+		// Añadimos un Boton abajo
+		JPanel botonera = new JPanel();
+		
+		JButton botonJugar = new JButton("Jugar");
+		
+		botonera.add(botonJugar);
+		
+		add(botonera, BorderLayout.SOUTH);
+		
+		// Establecemos fuente
+		//Font fuenteDialog = new Font("Dialog", Font.BOLD, 20);
+		
+		// Añadimos un Marcador arriba
+		JPanel marcador = new JPanel();
+		
+		JTextField local = new JTextField("1");
+		JTextField visitante = new JTextField("0");
+		JLabel nombreLocal = new JLabel("Local", JLabel.CENTER);
+		JLabel nombreVisitante = new JLabel("Visitante", JLabel.CENTER);
+		JLabel marcadorLocal = new JLabel("1", JLabel.CENTER);
+		JLabel marcadorVisitante = new JLabel("0", JLabel.CENTER);
+		
+		// Cambia el tamaño de la fuente a 20 
+		Font fuente = nombreLocal.getFont().deriveFont( 20f );
+		
+		nombreLocal.setFont(fuente);
+		nombreVisitante.setFont(fuente);
+		local.setFont(fuente);
+		visitante.setFont(fuente);
+		marcadorLocal.setFont(fuente);
+		marcadorVisitante.setFont(fuente);
+		
+		// Definimos dimensiones de los Label 
+		Dimension dimNombre = new Dimension(100, 50);
+		Dimension dimMarcador = new Dimension(50, 50); // ancho + alto 
+		
+		nombreLocal.setPreferredSize(dimNombre);
+		nombreVisitante.setPreferredSize(dimNombre);
+		local.setPreferredSize(dimMarcador);
+		visitante.setPreferredSize(dimMarcador);
+		marcadorLocal.setPreferredSize(dimMarcador);
+		marcadorVisitante.setPreferredSize(dimMarcador);
+		
+		// Establecemos el color de fondo de los marcadores
+		marcadorLocal.setBackground(Color.PINK);
+		marcadorVisitante.setBackground(Color.PINK);
+		marcadorLocal.setOpaque(true);
+		marcadorVisitante.setOpaque(true);
+		
+		// Añadimos los componentes al marcador
+		marcador.add(nombreLocal);
+		marcador.add(marcadorLocal);
+		marcador.add(marcadorVisitante);
+		marcador.add(nombreVisitante);
+		
+		add(marcador, BorderLayout.NORTH);
+		
 	}
 	
 }
