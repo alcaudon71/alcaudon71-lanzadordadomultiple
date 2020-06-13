@@ -5,11 +5,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.alcaudon.dado.servicios.ServicioLanzadorDado;
+import com.alcaudon.dado.utilidades.UtilidadesLanzadorDado;
 
 public class PanelJugarPartidoFutbol extends JPanel {
 
@@ -61,6 +68,9 @@ public class PanelJugarPartidoFutbol extends JPanel {
 		JPanel botonera = new JPanel();
 		
 		JButton botonJugar = new JButton("Jugar");
+		
+		// Listener del boton
+		botonJugar.addActionListener(new JugarPartidoFutbol());
 		
 		botonera.add(botonJugar);
 		
@@ -115,5 +125,75 @@ public class PanelJugarPartidoFutbol extends JPanel {
 		add(marcador, BorderLayout.NORTH);
 		
 	}
+	
+	// Listener del boton Jugar
+	private class JugarPartidoFutbol implements ActionListener {
+
+		private static final int NUM_MINIMO = 1;
+		private static final int NUM_MAXIMO = 6;
+		private static final int DELAY = 5000; // milisegundos
+		private static final int DADO_UNICO = 1;
+		private static final int DADO_DOBLE = 2;
+		private static final int DADO_MULTIPLE = 3;
+		
+		UtilidadesLanzadorDado utils;
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+			System.out.println("Jugar partido");
+			
+			ServicioLanzadorDado servBasico = new ServicioLanzadorDado();
+			Integer cronometro = 0;
+			Integer dadoTotal = 0;
+			List<Integer> listaDados = new ArrayList<Integer>();
+
+			// Obtenemos el boton
+			//String nombreBoton = (String) getValue(Action.NAME);
+
+			// Primer tiempo
+			for (int c = 1; c <= 5; c++) {
+
+				listaDados = servBasico.lanzaDado(NUM_MINIMO, NUM_MAXIMO, DELAY, DADO_UNICO);
+				
+				for (Integer dadoItem : listaDados) {
+					dadoTotal+= dadoItem;
+					System.out.println ("dadoItem: " + dadoItem);
+				}
+				
+				cronometro = c * 9;
+				
+				System.out.println ("Cronometro: " + cronometro);
+				System.out.println ("Dado: " + dadoTotal);
+				
+			}
+
+			// Intermedio
+			listaDados = servBasico.lanzaDado(NUM_MINIMO, NUM_MAXIMO, DELAY * 10, DADO_UNICO);
+			
+			// Segundo tiempo
+			for (int c = 6; c <= 10; c++) {
+
+				listaDados = servBasico.lanzaDado(NUM_MINIMO, NUM_MAXIMO, DELAY, DADO_UNICO);
+				
+				for (Integer dadoItem : listaDados) {
+					dadoTotal+= dadoItem;
+					System.out.println ("dadoItem: " + dadoItem);
+				}
+				
+				cronometro = c * 9;
+				
+				System.out.println ("Cronometro: " + cronometro);
+				System.out.println ("Dado: " + dadoTotal);
+				
+			}
+			
+			
+		}
+		
+	}
+	
+	
 	
 }
