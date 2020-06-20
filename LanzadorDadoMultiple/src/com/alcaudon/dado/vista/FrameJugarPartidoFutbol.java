@@ -19,7 +19,8 @@ public class FrameJugarPartidoFutbol extends JFrame {
 		
 		System.out.println("*** Cargamos Frame ***");
 		
-		PanelJugarPartidoFutbol panelJugarPartidoFutbol = new PanelJugarPartidoFutbol();
+		//PanelJugarPartidoFutbol panelJugarPartidoFutbol = new PanelJugarPartidoFutbol();
+		PanelJugarPartidoFutbolTimer panelJugarPartidoFutbol = new PanelJugarPartidoFutbolTimer();
 		
 		// Establecemos el Layout del Panel 
 		//FlowLayout disposicion = new FlowLayout(FlowLayout.CENTER); 

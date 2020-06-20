@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,7 +20,7 @@ import javax.swing.JTextField;
 import com.alcaudon.dado.servicios.ServicioLanzadorDado;
 import com.alcaudon.dado.utilidades.UtilidadesLanzadorDado;
 
-public class PanelJugarPartidoFutbol extends JPanel {
+public class PanelJugarPartidoFutbolTimer extends JPanel {
 
 	private static final String IMAGEN_RUTA_DADOS_PAREJA = "src/com/alcaudon/dado/imagenes/dados_pareja.jpg";
 	private static final String IMAGEN_RUTA_DADOS_MULTIPLES = "src/com/alcaudon/dado/imagenes/dados_multiples.jpg";
@@ -52,7 +54,7 @@ public class PanelJugarPartidoFutbol extends JPanel {
 	
 	JPanel marcador;
 	
-	public PanelJugarPartidoFutbol() {
+	public PanelJugarPartidoFutbolTimer() {
 		
 		System.out.println("*** Cargamos Panel Principal ***");
 		
@@ -67,6 +69,19 @@ public class PanelJugarPartidoFutbol extends JPanel {
 		PanelFotoCampoFutbol fotoCampoFutbol = new PanelFotoCampoFutbol();
 		
 		add(fotoCampoFutbol, BorderLayout.CENTER);
+		
+		
+		// Añadimos un Boton abajo
+		JPanel botonera = new JPanel();
+		
+		JButton botonJugar = new JButton("Jugar");
+		
+		// Listener del boton
+		botonJugar.addActionListener(new JugarPartidoFutbol());
+		
+		botonera.add(botonJugar);
+		
+		add(botonera, BorderLayout.SOUTH);
 		
 		// Establecemos fuente
 		//Font fuenteDialog = new Font("Dialog", Font.BOLD, 20);
@@ -116,22 +131,93 @@ public class PanelJugarPartidoFutbol extends JPanel {
 		
 		add(marcador, BorderLayout.NORTH);
 		
-		// Añadimos un Boton abajo
-		JPanel botonera = new JPanel();
+	}
+
+	// Listener del boton Jugar
+	private class JugarPartidoFutbol implements ActionListener {
 		
-		JButton botonJugar = new JButton("Jugar");
+		private static final int TIMERTASK_DELAY = 0;
+		private static final int TIMERTASK_PERIOD = 10000;
 		
-		// Listener del boton
-		botonJugar.addActionListener(new JugarPartidoFutbol(marcadorLocal, marcadorVisitante));
-		
-		botonera.add(botonJugar);
-		
-		add(botonera, BorderLayout.SOUTH);
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+			Timer timer = new Timer();
+			
+			TimerTask task = new TTimeC(marcadorLocal, marcadorVisitante); // = new TimerTask(marcadorLocal);
+			
+			System.out.println("Jugar partido");
+			
+			// Iniciamos la tarea dentro de DELAY milisegundos y luego lanzamos la tarea cada PERIOD milisegundos
+			//timer.scheduleAtFixedRate(task, TIMERTASK_DELAY, TIMERTASK_PERIOD);
+			timer.schedule(task, TIMERTASK_DELAY, TIMERTASK_PERIOD);
+			
+		}
 		
 	}
 	
-	// Listener del boton Jugar
-	private class JugarPartidoFutbol implements ActionListener {
+	// Accion del TimerTask
+	class TTimeC extends TimerTask {
+
+		private static final int SLEEP_MILISEGUNDOS = 1000;
+		
+	    private JLabel label1;
+	    private JLabel label2;
+	    int milisegundos = 0;
+	    int minutos = 0;
+	    int segundos = 0;
+	    String sOfTime;
+	    
+	    public TTimeC (JLabel label1, JLabel label2){
+	        this.label1 = label1;
+	        this.label2 = label2;
+	    }
+	    
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			
+			int cont = 0;
+			
+	        while (cont < 10){
+	        	cont++;
+	        	
+	            milisegundos++;
+	            if (milisegundos == 1000) {
+	                milisegundos = 0;
+	                segundos++;
+	            }
+	            if (segundos == 60) {
+	                segundos = 0;
+	                minutos++;
+	            }
+	            
+	            //sOfTime = minutos + ":" + segundos + ":" + milisegundos;
+	            sOfTime = milisegundos + "";
+	            
+	            System.out.println("sOfTime: " + sOfTime);
+	            
+	            label1.setText(sOfTime);    
+	            
+	            try {
+	                Thread.sleep(SLEEP_MILISEGUNDOS);
+	            } catch (Exception e) {
+	            	e.printStackTrace();
+	            }
+	            
+	        }
+	        
+	        JugarPartidoFutbolCampo jugar = new JugarPartidoFutbolCampo();
+	        
+	        jugar.jugarPartidoFutbolCampo(label1, label2);
+	        
+		}
+		
+	}
+	
+	// JugarPartidoFutbol
+	private class JugarPartidoFutbolCampo {
 
 		private static final int NUM_MINIMO = 1;
 		private static final int NUM_MAXIMO = 100;
@@ -149,14 +235,7 @@ public class PanelJugarPartidoFutbol extends JPanel {
 	    private JLabel labelMarcadorLocal;
 	    private JLabel labelMarcadorVisitante;
 	    
-	    // Constructor
-	    public JugarPartidoFutbol(JLabel panel1, JLabel panel2) {
-	    	labelMarcadorLocal = panel1;
-	    	labelMarcadorVisitante = panel2;
-	    }
-	    
-		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void jugarPartidoFutbolCampo (JLabel label1, JLabel label2) {
 			// TODO Auto-generated method stub
 			
 			System.out.println("Jugar partido");
@@ -172,6 +251,9 @@ public class PanelJugarPartidoFutbol extends JPanel {
 			Integer intMarcadorLocal = 0;
 			Integer intMarcadorVisitante = 0;
 
+			labelMarcadorLocal = label1;
+			labelMarcadorVisitante = label2;
+			
 			// Obtenemos el boton
 			//String nombreBoton = (String) getValue(Action.NAME);
 
@@ -340,6 +422,5 @@ public class PanelJugarPartidoFutbol extends JPanel {
 		
 	}
 	
-	
-	
 }
+
