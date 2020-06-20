@@ -45,12 +45,17 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 	public static final Integer SEPARACION_HORIZONTAL = 10;
 	public static final Integer SEPARACION_VERTICAL = 10;
 	
+	private static final Color COLOR_KAKI = new Color (220,220,160);
+	private static final Color COLOR_CELESTE_CLARO = new Color (200,240,240);
+	
 	private Image imagen;
 	public JTextField texto;
 	//public String dadoPanel;
 	
 	JLabel marcadorLocal;
 	JLabel marcadorVisitante;
+	JLabel cronometro;
+	JLabel comentarios;
 	
 	JPanel marcador;
 	
@@ -89,45 +94,63 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 		// Añadimos un Marcador arriba
 		marcador = new JPanel();
 		
-		//JTextField local = new JTextField("1");
-		//JTextField visitante = new JTextField("0");
-		JLabel nombreLocal = new JLabel("Local", JLabel.CENTER);
-		JLabel nombreVisitante = new JLabel("Visitante", JLabel.CENTER);
+		comentarios = new JLabel("Vestuario", JLabel.CENTER);
+		cronometro = new JLabel("minuto 0", JLabel.CENTER);
+		JLabel nombreLocal = new JLabel("Real Madrid", JLabel.CENTER);
+		JLabel nombreVisitante = new JLabel("Barcelona", JLabel.CENTER);
 		marcadorLocal = new JLabel("-", JLabel.CENTER);
 		marcadorVisitante = new JLabel("-", JLabel.CENTER);
 		
 		// Cambia el tamaño de la fuente a 20 
-		Font fuente = nombreLocal.getFont().deriveFont( 20f );
+		Font fuenteXS = nombreLocal.getFont().deriveFont( 10f );
+		Font fuenteS =  nombreLocal.getFont().deriveFont( 15f );
+		Font fuenteM =  nombreLocal.getFont().deriveFont( 20f );
+		Font fuenteL =  nombreLocal.getFont().deriveFont( 30f );
+		Font fuenteXL = nombreLocal.getFont().deriveFont( 40f );
 		
-		nombreLocal.setFont(fuente);
-		nombreVisitante.setFont(fuente);
-		//local.setFont(fuente);
-		//visitante.setFont(fuente);
-		marcadorLocal.setFont(fuente);
-		marcadorVisitante.setFont(fuente);
+		Font fuenteComicSans = new Font("Comic Sans MS", Font.BOLD, 20);
+		Font fuenteVerdana = new Font("Verdana", Font.BOLD, 15);
+		
+		nombreLocal.setFont(fuenteComicSans);
+		nombreVisitante.setFont(fuenteComicSans);
+		marcadorLocal.setFont(fuenteM);
+		marcadorVisitante.setFont(fuenteM);
+		cronometro.setFont(fuenteVerdana);
+		comentarios.setFont(fuenteVerdana);
 		
 		// Definimos dimensiones de los Label 
-		Dimension dimNombre = new Dimension(100, 50);
+		Dimension dimNombre = new Dimension(150, 50);
 		Dimension dimMarcador = new Dimension(50, 50); // ancho + alto 
+		Dimension dimCronometro = new Dimension(100, 50);
 		
 		nombreLocal.setPreferredSize(dimNombre);
 		nombreVisitante.setPreferredSize(dimNombre);
-		//local.setPreferredSize(dimMarcador);
-		//visitante.setPreferredSize(dimMarcador);
 		marcadorLocal.setPreferredSize(dimMarcador);
 		marcadorVisitante.setPreferredSize(dimMarcador);
+		cronometro.setPreferredSize(dimCronometro);
+		comentarios.setPreferredSize(dimCronometro);
 		
 		// Establecemos el color de fondo de los marcadores
 		marcadorLocal.setBackground(Color.PINK);
 		marcadorVisitante.setBackground(Color.PINK);
 		marcadorLocal.setOpaque(true);
 		marcadorVisitante.setOpaque(true);
+		nombreLocal.setBackground(COLOR_KAKI);
+		nombreVisitante.setBackground(COLOR_KAKI);
+		nombreLocal.setOpaque(true);
+		nombreVisitante.setOpaque(true);
+		//cronometro.setBackground(COLOR_KAKI);
+		//cronometro.setOpaque(true);
+		//comentarios.setBackground(COLOR_KAKI);
+		//comentarios.setOpaque(true);
 		
 		// Añadimos los componentes al marcador
+		marcador.add(comentarios);
 		marcador.add(nombreLocal);
 		marcador.add(marcadorLocal);
 		marcador.add(marcadorVisitante);
 		marcador.add(nombreVisitante);
+		marcador.add(cronometro);
 		
 		add(marcador, BorderLayout.NORTH);
 		
@@ -136,8 +159,8 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 	// Listener del boton Jugar
 	private class JugarPartidoFutbol implements ActionListener {
 		
-		private static final int TIMERTASK_DELAY = 0;
-		private static final int TIMERTASK_PERIOD = 10000;
+		private static final int TIMERTASK_DELAY = 1000;
+		private static final int TIMERTASK_PERIOD = 1000;
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -145,13 +168,15 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 			
 			Timer timer = new Timer();
 			
-			TimerTask task = new TTimeC(marcadorLocal, marcadorVisitante); // = new TimerTask(marcadorLocal);
+			TimerTask task = new TTimeC(marcadorLocal, marcadorVisitante, cronometro, comentarios);
 			
 			System.out.println("Jugar partido");
 			
 			// Iniciamos la tarea dentro de DELAY milisegundos y luego lanzamos la tarea cada PERIOD milisegundos
 			//timer.scheduleAtFixedRate(task, TIMERTASK_DELAY, TIMERTASK_PERIOD);
 			timer.schedule(task, TIMERTASK_DELAY, TIMERTASK_PERIOD);
+			
+			//timer.cancel();
 			
 		}
 		
@@ -164,55 +189,34 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 		
 	    private JLabel label1;
 	    private JLabel label2;
-	    int milisegundos = 0;
-	    int minutos = 0;
-	    int segundos = 0;
-	    String sOfTime;
+	    private JLabel label3;
+	    private JLabel label4;
 	    
-	    public TTimeC (JLabel label1, JLabel label2){
+	    public TTimeC (JLabel label1, JLabel label2, JLabel label3, JLabel label4){
 	        this.label1 = label1;
 	        this.label2 = label2;
+	        this.label3 = label3;
+	        this.label4 = label4;
 	    }
 	    
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			
-			int cont = 0;
-			
-	        while (cont < 10){
-	        	cont++;
-	        	
-	            milisegundos++;
-	            if (milisegundos == 1000) {
-	                milisegundos = 0;
-	                segundos++;
-	            }
-	            if (segundos == 60) {
-	                segundos = 0;
-	                minutos++;
-	            }
-	            
-	            //sOfTime = minutos + ":" + segundos + ":" + milisegundos;
-	            sOfTime = milisegundos + "";
-	            
-	            System.out.println("sOfTime: " + sOfTime);
-	            
-	            label1.setText(sOfTime);    
-	            
-	            try {
-	                Thread.sleep(SLEEP_MILISEGUNDOS);
-	            } catch (Exception e) {
-	            	e.printStackTrace();
-	            }
-	            
-	        }
-	        
-	        JugarPartidoFutbolCampo jugar = new JugarPartidoFutbolCampo();
-	        
-	        jugar.jugarPartidoFutbolCampo(label1, label2);
-	        
-		}
+	    @Override
+	    public void run() {
+	    	// TODO Auto-generated method stub
+
+	    	try {
+	    		Thread.sleep(SLEEP_MILISEGUNDOS);
+	    	} catch (Exception e) {
+	    		e.printStackTrace();
+	    	}        
+
+	    	JugarPartidoFutbolCampo jugar = new JugarPartidoFutbolCampo();
+
+	    	jugar.jugarPartidoFutbolCampo(label1, label2, label3, label4);
+
+	    	// Finalizamos el TimerTask 
+	    	this.cancel();
+
+	    }
 		
 	}
 	
@@ -230,17 +234,28 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 		
 		private static final int RONDA_MINUTOS = 9;
 		
+		private static final String COMENTARIO_GOL_LOCAL = "Gooool";
+		private static final String COMENTARIO_GOL_VISITANTE = "Gol";
+		private static final String COMENTARIO_PRIMER_TIEMPO = "1º Tiempo";
+		private static final String COMENTARIO_SEGUNDO_TIEMPO = "2º Tiempo";
+		private static final String COMENTARIO_JUEGO = "Juego";
+		private static final String COMENTARIO_DESCANSO = "Descanso";
+		private static final String COMENTARIO_FINAL = "Final";
+		
 		UtilidadesLanzadorDado utils;
 		
 	    private JLabel labelMarcadorLocal;
 	    private JLabel labelMarcadorVisitante;
+	    private JLabel labelCronometro;
+	    private JLabel labelComentarios;
 	    
-		public void jugarPartidoFutbolCampo (JLabel label1, JLabel label2) {
+		public void jugarPartidoFutbolCampo (JLabel label1, JLabel label2, JLabel label3, JLabel label4) {
 			// TODO Auto-generated method stub
 			
 			System.out.println("Jugar partido");
 			
 			ServicioLanzadorDado servBasico = new ServicioLanzadorDado();
+			String comentarios = "";
 			Integer cronometro = 0;
 			Integer dadoTotal = 0;
 			List<Integer> listaDados = new ArrayList<Integer>();
@@ -253,10 +268,14 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 
 			labelMarcadorLocal = label1;
 			labelMarcadorVisitante = label2;
+			labelCronometro = label3;
+			labelComentarios = label4;
 			
 			// Obtenemos el boton
 			//String nombreBoton = (String) getValue(Action.NAME);
 
+			comentarios = COMENTARIO_PRIMER_TIEMPO;
+			labelComentarios.setText(comentarios);
 			System.out.println("---> Empieza el primer tiempo ");
 			
 			/**
@@ -266,6 +285,8 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 			 */
 			for (int c = 1; c <= 5; c++) {
 	
+				comentarios = COMENTARIO_JUEGO;
+				
 				// Actualizamos cronometro en minutos
 				cronometro = c * RONDA_MINUTOS;
 				
@@ -283,6 +304,7 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 				// Gol local 
 				if (dadoLocal >= DADO_GOL) {
 					golesLocal += 1;
+					comentarios = COMENTARIO_GOL_LOCAL;
 					System.out.println ("*** Gooool ***");
 				}
 				
@@ -300,6 +322,7 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 				// Gol visitante 
 				if (dadoVisitante >= DADO_GOL) {
 					golesVisitante += 1;
+					comentarios = COMENTARIO_GOL_VISITANTE;
 					System.out.println ("*** Gol ***");
 				}
 				
@@ -328,6 +351,8 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 				// Actualizamos los Label del Panel 
 				labelMarcadorLocal.setText(intMarcadorLocal.toString().trim());
 				labelMarcadorVisitante.setText(intMarcadorVisitante.toString().trim());
+				labelCronometro.setText("minuto " + cronometro);
+				labelComentarios.setText(comentarios);
 				
 				//marcadorLocal.repaint();
 				
@@ -337,11 +362,15 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 				
 			}
 
+			comentarios = COMENTARIO_DESCANSO;
+			labelComentarios.setText(comentarios);
 			System.out.println("... Descanso ... ");
 			
 			// Intermedio
-			listaDados = servBasico.lanzaDado(NUM_MINIMO, NUM_MAXIMO, DELAY * 10, DADO_UNICO);
+			listaDados = servBasico.lanzaDado(NUM_MINIMO, NUM_MAXIMO, DELAY * 4, DADO_UNICO);
 			
+			comentarios = COMENTARIO_SEGUNDO_TIEMPO;
+			labelComentarios.setText(comentarios);
 			System.out.println("---> Empieza el segundo tiempo ");
 			
 			/**
@@ -351,6 +380,8 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 			 */
 			for (int c = 6; c <= 10; c++) {
 
+				comentarios = COMENTARIO_JUEGO;
+				
 				// Actualizamos cronometro en minutos
 				cronometro = c * RONDA_MINUTOS;
 				
@@ -368,6 +399,7 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 				// Gol local 
 				if (dadoLocal >= DADO_GOL) {
 					golesLocal += 1;
+					comentarios = COMENTARIO_GOL_LOCAL;
 					System.out.println ("*** Gooool ***");
 				}
 				
@@ -385,6 +417,7 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 				// Gol visitante 
 				if (dadoVisitante >= DADO_GOL) {
 					golesVisitante += 1;
+					comentarios = COMENTARIO_GOL_VISITANTE;
 					System.out.println ("*** Gol ***");
 				}
 				
@@ -413,9 +446,13 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 				// Actualizamos los Label del Panel 
 				labelMarcadorLocal.setText(intMarcadorLocal.toString().trim());
 				labelMarcadorVisitante.setText(intMarcadorVisitante.toString().trim());
+				labelCronometro.setText("minuto " + cronometro);
+				labelComentarios.setText(comentarios);
 				
 			}
 			
+			comentarios = COMENTARIO_FINAL;
+			labelComentarios.setText(comentarios);
 			System.out.println("---> Final del partido ");
 			
 		}

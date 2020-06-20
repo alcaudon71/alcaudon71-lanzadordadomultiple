@@ -8,8 +8,8 @@ public class FrameJugarPartidoFutbol extends JFrame {
 	private static final String FRAME_TITULO = "App Partido Futbol";
 	private static final Integer FRAME_POS_HORIZONTAL = 400;
 	private static final Integer FRAME_POS_VERTICAL = 200;
-	private static final Integer FRAME_ANCHO = 600;
-	private static final Integer FRAME_ALTO = 600;
+	private static final Integer FRAME_ANCHO = 700;
+	private static final Integer FRAME_ALTO = 700;
 	
 	public FrameJugarPartidoFutbol() {
 		
