@@ -235,11 +235,13 @@ public class PanelJugarPartidoBaloncestoTimer extends JPanel {
 		private static final int DADO_GOL = 85;
 		
 		private static final int RONDA_MINUTOS = 4;
+		private static final float RONDA_MINUTOS_PRORROGA = 2.5f;
 		
 		private static final String COMENTARIO_GOL_LOCAL = "Gooool";
 		private static final String COMENTARIO_GOL_VISITANTE = "Gol";
 		private static final String COMENTARIO_PRIMER_TIEMPO = "1º Tiempo";
 		private static final String COMENTARIO_SEGUNDO_TIEMPO = "2º Tiempo";
+		private static final String COMENTARIO_PRORROGA = "Prorroga";
 		private static final String COMENTARIO_JUEGO = "Juego";
 		private static final String COMENTARIO_DESCANSO = "Descanso";
 		private static final String COMENTARIO_FINAL = "Final";
@@ -267,6 +269,7 @@ public class PanelJugarPartidoBaloncestoTimer extends JPanel {
 			Integer puntosVisitante = 0;
 			Integer intMarcadorLocal = 0;
 			Integer intMarcadorVisitante = 0;
+			Integer c = 0;
 
 			labelMarcadorLocal = label1;
 			labelMarcadorVisitante = label2;
@@ -280,13 +283,21 @@ public class PanelJugarPartidoBaloncestoTimer extends JPanel {
 			labelComentarios.setText(comentarios);
 			System.out.println("---> Empieza el primer tiempo ");
 			
+			// Actualizamos los Label del Panel 
+			labelMarcadorLocal.setText("0");
+			labelMarcadorVisitante.setText("0");
+			labelCronometro.setText("minuto " + cronometro);
+			labelComentarios.setText(comentarios);
+			
 			/**
 			 * ===========================================================================================================
 			 * Primer tiempo
 			 * ===========================================================================================================
 			 */
-			for (int c = 1; c <= 5; c++) {
+			for (int p = 1; p <= 5; p++) {
 	
+				c++;
+				
 				comentarios = COMENTARIO_JUEGO;
 				
 				// Actualizamos cronometro en minutos
@@ -387,8 +398,10 @@ public class PanelJugarPartidoBaloncestoTimer extends JPanel {
 			 * Segundo tiempo
 			 * ===========================================================================================================
 			 */
-			for (int c = 6; c <= 10; c++) {
+			for (int p = 1; p <= 5; p++) {
 
+				c++;
+				
 				comentarios = COMENTARIO_JUEGO;
 				
 				// Actualizamos cronometro en minutos
@@ -466,6 +479,103 @@ public class PanelJugarPartidoBaloncestoTimer extends JPanel {
 				labelComentarios.setText(comentarios);
 				
 			}
+			
+			/**
+			 * ===========================================================================================================
+			 * Prorroga
+			 * ===========================================================================================================
+			 */
+			int cp = 0;
+			while (intMarcadorLocal == intMarcadorVisitante) {
+
+				comentarios = COMENTARIO_PRORROGA;
+				labelComentarios.setText(comentarios);
+				System.out.println("---> Empieza la prorroga ");
+
+				for (int p = 1; p <= 2; p++) {
+
+					cp++;
+
+					comentarios = COMENTARIO_JUEGO;
+
+					// Actualizamos cronometro en minutos
+					int cRedondeo = (int) (cp * RONDA_MINUTOS_PRORROGA);
+					cronometro = c * RONDA_MINUTOS + cRedondeo;
+
+					// Lanzamos dado de Equipo Local
+					listaDados = servBasico.lanzaDado(NUM_MINIMO, NUM_MAXIMO, DELAY, DADO_DOBLE);
+
+					dadoTotal = 0;
+					for (Integer dadoItem : listaDados) {
+						dadoTotal+= dadoItem;
+						//System.out.println ("dadoItem: " + dadoItem);
+					}
+
+					dadoLocal = dadoTotal;
+
+					// Gol local 
+					//if (dadoLocal >= DADO_GOL) {
+					//	golesLocal += 1;
+					//	comentarios = COMENTARIO_GOL_LOCAL;
+					//	System.out.println ("*** Gooool ***");
+					//}
+
+					puntosLocal += dadoLocal;
+
+					// Lanzamos dado de Equipo Visitante
+					listaDados = servBasico.lanzaDado(NUM_MINIMO, NUM_MAXIMO, DELAY, DADO_DOBLE);
+
+					dadoTotal = 0;
+					for (Integer dadoItem : listaDados) {
+						dadoTotal+= dadoItem;
+						//System.out.println ("dadoItem: " + dadoItem);
+					}
+
+					dadoVisitante = dadoTotal;
+
+					// Gol visitante 
+					//if (dadoVisitante >= DADO_GOL) {
+					//	golesVisitante += 1;
+					//	comentarios = COMENTARIO_GOL_VISITANTE;
+					//	System.out.println ("*** Gol ***");
+					//}
+
+					puntosVisitante += dadoVisitante;
+
+					// Calculamos el Handicap
+					//if (golesLocal < 0) {
+					//	intMarcadorVisitante = golesVisitante - golesLocal;
+					//	intMarcadorLocal = 0;
+					//} else if (golesVisitante < 0) {
+					//	intMarcadorLocal = golesLocal - golesVisitante;
+					//	intMarcadorVisitante = 0;
+					//} else {
+					//	intMarcadorLocal = golesLocal;
+					//	intMarcadorVisitante = golesVisitante;
+					//}
+
+					intMarcadorLocal = puntosLocal;
+					intMarcadorVisitante = puntosVisitante;
+
+					System.out.println ("*** Cronometro: minuto " + cronometro);
+					System.out.println ("Dado Local    : " + dadoLocal);
+					System.out.println ("Dado Visitante: " + dadoVisitante);
+					System.out.println ("Puntos Local    : " + puntosLocal);
+					System.out.println ("Puntos Visitante: " + puntosVisitante);
+					System.out.println ("==============================");
+					System.out.println ("Marcador Local    : " + intMarcadorLocal);
+					System.out.println ("Marcador Visitante: " + intMarcadorVisitante);
+					System.out.println ("==============================");
+
+					// Actualizamos los Label del Panel 
+					labelMarcadorLocal.setText(intMarcadorLocal.toString().trim());
+					labelMarcadorVisitante.setText(intMarcadorVisitante.toString().trim());
+					labelCronometro.setText("minuto " + cronometro);
+					labelComentarios.setText(comentarios);
+
+				}
+				
+			} // intMarcadorLocal == intMarcadorVisitante
 			
 			comentarios = COMENTARIO_FINAL;
 			labelComentarios.setText(comentarios);

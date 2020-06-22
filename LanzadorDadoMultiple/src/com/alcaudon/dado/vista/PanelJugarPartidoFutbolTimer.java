@@ -278,6 +278,12 @@ public class PanelJugarPartidoFutbolTimer extends JPanel {
 			labelComentarios.setText(comentarios);
 			System.out.println("---> Empieza el primer tiempo ");
 			
+			// Actualizamos los Label del Panel 
+			labelMarcadorLocal.setText("0");
+			labelMarcadorVisitante.setText("0");
+			labelCronometro.setText("minuto " + cronometro);
+			labelComentarios.setText(comentarios);
+			
 			/**
 			 * ===========================================================================================================
 			 * Primer tiempo
